@@ -1,5 +1,8 @@
 import { createSchema } from "graphql-yoga";
-import { fetchNeos } from "../resolvers/asteroid.resolver";
+import {
+  fetchNeos,
+  fetchNeosBetweenDates,
+} from "../resolvers/asteroid.resolver";
 import { GENERAL, getUriBetweenDate } from "../request/endpoint.util";
 import { Neo } from "../types/neo.type";
 
@@ -13,6 +16,29 @@ const schema = createSchema({
       neoBetweenDates(from: String!, until: String!): [Neo!]!
     }
 
+    type Kilometers {
+      estimated_diameter_min: Float
+      estimated_diameter_max: Float
+    }
+
+    type Diameter {
+      kilometers: Kilometers
+    }
+
+    type RelativeVelocity {
+      kilometers_per_second: Float
+      kilometers_per_hour: Float
+      miles_per_hour: Float
+    }
+
+    type ApproachInfo {
+      close_approach_date: String
+      close_approach_date_full: String
+      epoch_date_close_approach: String
+      relative_velocity: RelativeVelocity
+      orbiting_body: String
+    }
+
     type Neo {
       id: Int
       neo_reference_id: Int
@@ -22,6 +48,9 @@ const schema = createSchema({
       nasa_jpl_url: String
       absolute_magnitude_h: Float
       is_potentially_hazardous_asteroid: Boolean
+      estimated_diameter: Diameter
+      close_approach_data: [ApproachInfo]
+      orbiting_body: String
     }
 
     type Dates {
@@ -37,21 +66,7 @@ const schema = createSchema({
       },
 
       neoBetweenDates: async (...[_, dates]) => {
-        const arr: Neo[] = [];
-        
-        try {
-          const fromFomatted = format("yyyy-MM-dd", new Date(dates.from));
-          const untilFomatted = format("yyyy-MM-dd", new Date(dates.from));
-          const data = await fetchNeos(
-            getUriBetweenDate(fromFomatted, untilFomatted)
-          );
-          
-          for (let key in data?.near_earth_objects) {
-            arr.push(data?.near_earth_objects[key as any]);
-          }
-        } catch (error) {}
-
-        return arr.flat();
+        return await fetchNeosBetweenDates(dates.from, dates.until);
       },
     },
   },

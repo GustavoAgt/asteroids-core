@@ -22,7 +22,6 @@ class App {
     this.app.use(cors());
     this.app.use(express.json());
     this.app.use(new ConfigRouter().autoConfig("routes"));
-    // this.app.use(exceptionHandle);
   }
 
   public getApp(): Express {
