@@ -1,19 +1,18 @@
 import { createSchema } from "graphql-yoga";
 import {
+  fetchBookmarkedNeos,
   fetchNeos,
   fetchNeosBetweenDates,
+  saveNeoBookmarked,
 } from "../resolvers/asteroid.resolver";
-import { GENERAL, getUriBetweenDate } from "../request/endpoint.util";
-import { Neo } from "../types/neo.type";
-
-//@ts-ignore
-import format from "date-format";
+import { GENERAL } from "../request/endpoint.util";
 
 const schema = createSchema({
   typeDefs: /* GraphQL */ `
     type Query {
       asteroids: [Neo!]!
       neoBetweenDates(from: String!, until: String!): [Neo!]!
+      bookmarkedNeos: [Neo!]!
     }
 
     type Kilometers {
@@ -57,7 +56,12 @@ const schema = createSchema({
       from: String!
       until: String!
     }
+
+    type Mutation {
+      saveAsteroid(id: String!): Neo!
+    }
   `,
+
   resolvers: {
     Query: {
       asteroids: async () => {
@@ -65,8 +69,19 @@ const schema = createSchema({
         return data?.near_earth_objects;
       },
 
-      neoBetweenDates: async (...[_, dates]) => {
-        return await fetchNeosBetweenDates(dates.from, dates.until);
+      neoBetweenDates: async (_, args) => {
+        const { from, until } = args;
+        return await fetchNeosBetweenDates(from, until);
+      },
+
+      bookmarkedNeos: async () => {
+        return await fetchBookmarkedNeos();
+      },
+    },
+
+    Mutation: {
+      saveAsteroid: async (_: unknown, args: { id: string }) => {
+        return await saveNeoBookmarked(args.id);
       },
     },
   },

@@ -1,37 +1,37 @@
 export type Neo = {
-  links: { self: String };
-  id: String;
-  neo_reference_id: String;
-  name: String;
-  name_limited: String;
-  designation: Number;
-  nasa_jpl_url: String;
-  absolute_magnitude_h: Number;
-  is_potentially_hazardous_asteroid: Boolean;
+  links: { self: string };
+  id: string;
+  neo_reference_id: string;
+  name: string;
+  name_limited: string;
+  designation: number;
+  nasa_jpl_url: string;
+  absolute_magnitude_h: number;
+  is_potentially_hazardous_asteroid: boolean;
   estimated_diameter: {
     kilometers: {
-      estimated_diameter_min: Number;
-      estimated_diameter_max: Number;
+      estimated_diameter_min: number;
+      estimated_diameter_max: number;
     };
   };
   close_approach_data: {
-    close_approach_date: String;
-    close_approach_date_full: String;
-    epoch_date_close_approach: String;
+    close_approach_date: string;
+    close_approach_date_full: string;
+    epoch_date_close_approach: string;
     relative_velocity: {
-      kilometers_per_second: Number;
-      kilometers_per_hour: Number;
-      miles_per_hour: Number;
+      kilometers_per_second: number;
+      kilometers_per_hour: number;
+      miles_per_hour: number;
     };
 
     miss_distance: {
-      astronomical: Number;
-      lunar: Number;
-      kilometers: Number;
-      miles: Number;
+      astronomical: number;
+      lunar: number;
+      kilometers: number;
+      miles: number;
     };
 
-    orbiting_body: String;
+    orbiting_body: string;
   }[];
 };
 export type NeoResult = {

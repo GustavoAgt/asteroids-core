@@ -18,12 +18,22 @@ model User {
 }
 
 model Asteroid {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  comment   Comment?
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    Int?
+  id                     Int      @id
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  neoReferenceId         String?
+  links                  Json?
+  name                   String?
+  nameLimited            String?
+  designation            Int?
+  nasaJPLUrl             String?
+  absoluteMagnitudeH     String?
+  isPotentiallyHazardAst Boolean?
+  estimatedDiameter      Json?
+  closeApproachData      Json?
+  comment                Comment?
+  User                   User?    @relation(fields: [userId], references: [id])
+  userId                 Int?
 }
 
 model Comment {

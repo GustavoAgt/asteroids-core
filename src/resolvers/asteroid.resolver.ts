@@ -1,5 +1,9 @@
 import { getUriBetweenDate } from "../request/endpoint.util";
-import { fetchNeosServ } from "../services/asteroid-fetcher.service";
+import {
+  fetchDBNeosServ,
+  fetchNeosServ,
+  saveBookmarkedNeoServ,
+} from "../services/asteroid-fetcher.service";
 import { Neo, NeoResult } from "../types/neo.type";
 
 export const fetchNeos = async (
@@ -7,7 +11,18 @@ export const fetchNeos = async (
 ): Promise<NeoResult | undefined> => {
   let data = null;
   try {
-    data = await fetchNeosServ(endpoint);
+    data = await fetchNeosServ<NeoResult>(endpoint);
+  } catch (error) {
+    console.log(error);
+  }
+
+  return data?.data;
+};
+
+const fetchNeo = async (endpoint: string): Promise<Neo | undefined> => {
+  let data = null;
+  try {
+    data = await fetchNeosServ<Neo>(endpoint);
   } catch (error) {
     console.log(error);
   }
@@ -26,4 +41,19 @@ export const fetchNeosBetweenDates = async (date1: any, date2: any) => {
   } catch (error) {}
 
   return arr.flat();
+};
+
+export const saveNeoBookmarked = async (id: string) => {
+  try {
+    const data = await fetchNeo(`/neo/${id}?api_key=DEMO_KEY`);
+    return await saveBookmarkedNeoServ(data);
+  } catch (error) {
+    console.log(error)
+  }
+};
+
+export const fetchBookmarkedNeos = async () => {
+  try {
+    return await fetchDBNeosServ();
+  } catch (error) {}
 };
